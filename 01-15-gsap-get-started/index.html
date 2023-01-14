@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1c1b1b;
+            background-image: url("./bg3.svg");
+            background-position: 0 0;
+            background-size: auto;
+            color: #bbb;
+            padding-bottom: 100vh;
+        }
+
+        body > * + * {
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #40338d;
+        }
+
+        .box {
+            width: 75px;
+            height: 75px;
+            background-color: #54a740;
+            border-radius: 10px;
+        }
+
+        button {
+            font-family: inherit;
+            padding: 5px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color ease-out 100ms;
+            border: 0;
+            border-radius: 5px;
+            background-color: #1e1eda;
+            color: #fff;
+        }
+
+        button:hover {
+            background-color: #00009f;
+        }
+    </style>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+</head>
+<body>
+
+<div x-data="{ initial: { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1, backgroundColor: '#54a740'}, to: { x: 200, y: 50, opacity: 1, rotation: 90, scale: 2, backgroundColor: '#0000ff', duration: 1 } }">
+    <p>
+        <input type="color" x-model="to.backgroundColor">
+        <input type="number" x-model="to.x">
+        <input type="number" x-model="to.y">
+        <input type="number" x-model="to.duration">
+        <input type="number" x-model="to.rotation">
+        <input type="text" x-model="to.opacity">
+        <input type="text" x-model="to.scale">
+    </p>
+    <!--    <pre x-html="JSON.stringify(to, null, 2)"></pre>-->
+    <p>
+        <button @click="gsap.set($refs.box, {...initial}), gsap.to($refs.box, {...to})">Rerun</button>
+        <button @click="gsap.set($refs.box, {...initial})">Reset</button>
+        <button @click="gsap.to($refs.box, {...to})">Run</button>
+    </p>
+
+    <div x-ref="box" class="box"></div>
+</div>
+
+<div x-data="{to: {x: 80, rotation: 90}}">
+    <svg viewBox="0 0 100 100"
+         style="height: 200px; border: 1px solid red">
+        <rect @click="gsap.to($el, {...to})" fill="#28a92b" x="0" y="35" width="30" height="30" rx="2"/>
+    </svg>
+</div>
+
+<div x-data="{obj: { myNum: 10, myColor: 'red' }}" x-init="console.log({...obj})">
+    <!--    <pre x-html="JSON.stringify(obj, null, 2)"></pre>-->
+    <button @click="gsap.to(obj, {myNum: 200, myColor: 'blue', onUpdate: () => console.log(obj)})">Animate js object
+    </button>
+</div>
+
+<div x-data="{ctx: null, pos: {x: 0, y: 0}, redraw() { this.ctx.clearRect(0, 0, 300, 300), this.ctx.fillRect(this.pos.x, this.pos.y, 100, 100) }}"
+     x-init="ctx = $refs.canvas.getContext('2d'), ctx.fillStyle = '#54a740'">
+    <button @click="gsap.to(pos, {repeat: 2, yoyo: true, x: 200, y: 200, duration: 1, onUpdate: () => redraw()})">Run
+    </button>
+    <canvas x-ref="canvas"
+            width="300"
+            height="300"
+            style="border: 1px solid #797979"></canvas>
+</div>
+
+<div x-data="{ common: { rotation: 360, duration: 1 }}"
+     @click="gsap.to($refs.box1, {...common}), gsap.to($refs.box2, {...common, delay: 1})">
+    <div style="display: flex; gap: 200px; justify-content: center; padding: 50px 0;">
+        <div x-ref="box1" class="box" style="background-color: hotpink"></div>
+        <div x-ref="box2" class="box"></div>
+    </div>
+</div>
+
+<div x-data="{props: {x: 500, duration: 2.5, ease: 'none'}, initial: {x: 0}}">
+    <div x-ref="box" class="box" style="margin-left: 200px"></div>
+    <select x-model="props.ease">
+        <option>none</option>
+        <option>back</option>
+        <option>power1.in</option>
+        <option>power1.out</option>
+        <option>power1.inout</option>
+        <option>steps (2)</option>
+        <option>elastic.in(1, 0.3)</option>
+        <option>bounce.in</option>
+    </select>
+    <span x-text="props.ease"></span>
+    <button @click="gsap.set($refs.box, {...initial}), console.log({...props}), gsap.to($refs.box, {...props})">Rerun
+    </button>
+</div>
+
+<div x-data="{
+    from: { duration: 2, scale: 0.5, opacity: 0, delay: 0.5, stagger: 0.2, ease: 'elastic', force3D: true },
+      to: { duration: 0.5, opacity: 0, y: -100, ease: 'back.in', stagger: 0.1 },
+ initial: {y: 0, opacity: 1},
+}">
+    <button @click="gsap.from($refs.boxes.querySelectorAll('.box'), from)">Occur</button>
+    <button @click="gsap.to($refs.boxes.querySelectorAll('.box'), to)">Gone</button>
+    <button @click="gsap.set($refs.boxes.querySelectorAll('.box'), initial)">Reset</button>
+    <div x-ref="boxes" style="display: flex; gap: 50px; justify-content: center; margin: 1rem 0">
+        <div style="background-color: palevioletred" class="box red"></div>
+        <div style="background-color: #2e2eaf" class="box purple"></div>
+        <div style="background-color: #69cc36" class="box orange"></div>
+        <div style="background-color: #7317b0" class="box purple"></div>
+        <div style="background-color: #c59e1f" class="box green"></div>
+    </div>
+</div>
+
+<div x-data>
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0">
+        <div x-ref="box1" style="background-color: #69cc36" class="box orange"></div>
+        <div x-ref="box2" style="background-color: #7317b0" class="box purple"></div>
+        <div x-ref="box3" style="background-color: #c59e1f" class="box green"></div>
+    </div>
+    <button @click="tl = gsap.timeline(), tl.to($refs.box1, {x: 600, duration: 3}), tl.to($refs.box2, {x: 600, duration: 2, delay: 1}), tl.to($refs.box3, {x: 600, duration: 1})">
+        Start
+    </button>
+</div>
+
+<div x-data="{ tween: null }" x-init="tween = gsap.to($refs.box, {duration: 1, rotate: 360, repeat: -1, repeatDelay: 1, yoyo: true})">
+    <div x-ref="box" class="box" style="margin-left: 100px"></div>
+    <button @click="console.log(tween)">Pause</button>
+</div>
+
+<script>
+    // gsap.to('.box', {x: 200});
+</script>
+</body>
+</html>
