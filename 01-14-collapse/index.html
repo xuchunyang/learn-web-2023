@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapse 折叠面板</title>
+    <style>
+        body {
+            max-width: 80em;
+            margin: 0 auto;
+            padding: 8px 8px 100vh;
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 4px 10px;
+        }
+
+        section {
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        section + section {
+            margin-top: 1rem;
+        }
+
+        .collapse1:not(.show) {
+            display: none;
+        }
+
+        .collapse2 {
+            overflow-y: hidden;
+            max-height: 0;
+            transition: max-height 500ms;
+        }
+
+        .collapse2.show {
+            max-height: 300px;
+        }
+
+        .collapse3:not(.show) {
+            display: none;
+        }
+
+        .collapse3.collapsing {
+            height: 0;
+            overflow-y: hidden;
+            transition: height 500ms;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <h1>基本思路 CSS display: none</h1>
+    <div>
+        <button data-target="collapse1-1">Toggle collapse1-1</button>
+        <div id="collapse1-1" class="collapse1">
+            <div style="border: 1px solid black; padding: 5px">
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button data-target="collapse1-2">Toggle collapse1-2</button>
+        <div id="collapse1-2" class="collapse1 show">
+            <div style="border: 1px solid black; padding: 5px">
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h1>CSS max-height</h1>
+    <p>⚠️ 需提前计算元素高度！</p>
+    <div>
+        <button data-target="collapse2-1">Toggle collapse2-1</button>
+        <div id="collapse2-1" class="collapse2">
+            <div style="border: 1px solid black; padding: 5px">
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button data-target="collapse2-2">Toggle collapse2-2</button>
+        <div id="collapse2-2" class="collapse2 show">
+            <div style="border: 1px solid black; padding: 5px">
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h1>JavaScript 计算 height (like bootstrap) <span style="color: red">FIXME</span></h1>
+    <div>
+        <button data-target="collapse3-1">Toggle collapse3-1</button>
+        <div id="collapse3-1" class="collapse3">
+            <div style="border: 1px solid black; padding: 5px">
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+                <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+                    welcome guest in many households across the world.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('[data-target^="collapse1-"]').forEach((elem) => {
+        elem.addEventListener('click', (e) => {
+            document.getElementById(e.target.dataset.target).classList.toggle('show');
+        });
+    });
+
+    document.querySelectorAll('[data-target^="collapse2-"]').forEach((elem) => {
+        elem.addEventListener('click', (e) => {
+            document.getElementById(e.target.dataset.target).classList.toggle('show');
+        });
+    });
+
+    document.querySelectorAll('[data-target^="collapse3-"]').forEach((elem) => {
+
+        elem.addEventListener('click', (e) => {
+            const target = document.getElementById(e.target.dataset.target);
+
+            if (target.classList.contains('show')) {
+                // hide
+                target.offsetHeight;
+                target.classList.add('collapsing');
+                target.addEventListener('transitionend', () => {
+                    target.classList.remove('collapsing');
+                    target.classList.remove('show');
+                }, {
+                    once: true,
+                });
+            } else {
+                // show
+                target.classList.add('show');
+                const full = target.offsetHeight;
+                target.classList.add('collapsing');
+                target.offsetHeight;
+                target.style.height = `${full}px`;
+                target.addEventListener('transitionend', () => {
+                    target.classList.remove('collapsing');
+                }, {
+                    once: true,
+                });
+            }
+
+            // target.classList.add('show');
+            // const full = target.getBoundingClientRect().height;
+            // target.classList.add('collapsing');
+            // target.classList.add('collapsing');
+            // target.style.height = `0px`;
+            // target.style.transitionProperty = 'height';
+            // target.style.transitionTimingFunction = 'ease';
+            // target.style.transitionDuration = '500ms';
+            // target.style.overflow = 'hidden';
+            // target.style.height = `${full}px`;
+            // target.addEventListener('transitionend', () => {
+            //     target.style.height = null;
+            //     target.classList.remove('collapsing');
+            // });
+            // reflow
+            // target.offsetHeight;
+            // target.style.height = `${full}px`;
+            //
+            // target.addEventListener('transitionend', () => {
+            //     target.style.height = null;
+            //     target.classList.remove('collapsing');
+            // });
+
+
+            // setTimeout(() => {
+            //     target.style.height = `${full}px`;
+            // }, 0);
+            // target.classList.remove('show');
+
+            // target.style.height = '100px';
+            // target.style.display = 'block';
+            // const full = target.getBoundingClientRect().height;
+            // target.style.display = '';
+            // alert(full);
+            // target.classList.add('collapsing');
+            // target.style.height = `${full}px`;
+            // target.style.height = 'auto';
+            // target.style.height = `${full}px`;
+            // target.classList.add('collapsing');
+            // target.style.transitionProperty = 'height';
+            // target.style.transitionTimingFunction = 'ease';
+            // target.style.transitionDuration = '500ms';
+            // target.style.transitionDelay = '0';
+            // target.style.height = `211px`;
+            // target.style.transition = 'height 1s';
+            // target.style.height = `${target.getBoundingClientRect().height}px`;
+            // alert('hello');
+            // target.style.height = '200px';
+        });
+    });
+</script>
+
+</body>
+</html>
