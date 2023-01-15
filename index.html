@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Web 2023</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <style>
+        li + li {
+            margin-top: 5px;
+        }
+
+        a {
+            font-size: 22px;
+            line-height: 2;
+            text-decoration: none;
+            color: #2e2eaf;
+        }
+    </style>
+</head>
+<body>
+<div x-data="{ files: [] }"
+     x-init="files = (await (await fetch('https://api.github.com/repos/xuchunyang/learn-web-2023/contents/')).json())">
+    <p x-show="!files">Loading...</p>
+    <ul>
+        <template x-for="dir in files.filter(f => f.type === 'dir').reverse()">
+            <li>
+                <a x-bind:href="dir.path" x-text="dir.name"></a>
+            </li>
+        </template>
+    </ul>
+</div>
+</body>
+</html>
