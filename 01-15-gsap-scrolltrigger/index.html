@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrollTrigger</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
+            height: 100%;
+            margin: 0;
+            background-color: #424242;
+            color: #dadada;
+            padding-bottom: 100vh;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: hotpink;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+        }
+
+        .b {
+            background-color: #1e1ea9;
+        }
+
+        .c {
+            background-color: #53a153;
+        }
+    </style>
+</head>
+<body>
+<div style="position: fixed; top: 0; left: 500px; width: 1px; height: 100%; background-color: #7c7c7c"></div>
+<div style="margin-top: 120vh">
+    <div class="box a" style="margin-top: 33vh">A</div>
+    <div class="box b" style="margin-top: 33vh">B</div>
+    <div class="box c" style="margin-top: 33vh">C</div>
+</div>
+<script>
+    // gsap.registerPlugin(ScrollTrigger);
+
+    gsap.from('.a', {
+        scrollTrigger: {
+            trigger: '.a',
+            start: 'top 80%',
+            end: 'top 20%',
+            toggleActions: 'restart reset restart reset',
+            // scrub: true,
+            // pin: true,
+            markers: true,
+        },
+        duration: 1,
+        ease: 'power1.out',
+        x: 400,
+        opacity: 0,
+    });
+</script>
+</body>
+</html>
