@@ -19,7 +19,7 @@
     </style>
 </head>
 <body>
-<div x-data="{ files: [] }"
+<div x-data="{ files: null }"
      x-init="files = (await (await fetch('https://api.github.com/repos/xuchunyang/learn-web-2023/contents/')).json())">
     <p x-show="!files">Loading...</p>
     <ul>
@@ -30,5 +30,14 @@
         </template>
     </ul>
 </div>
+
+<div x-data="{ repo: null }"
+     x-init="repo = (await (await fetch('https://api.github.com/repos/xuchunyang/learn-web-2023')).json())">
+    <p x-show="!repo">Loading...</p>
+    <template x-if="repo">
+        <p x-text="'Last pushed at ' + repo.pushed_at"></p>
+    </template>
+</div>
+
 </body>
 </html>
