@@ -22,13 +22,15 @@
 <div x-data="{ files: null }"
      x-init="files = (await (await fetch('https://api.github.com/repos/xuchunyang/learn-web-2023/contents/')).json())">
     <p x-show="!files">Loading...</p>
-    <ul>
-        <template x-for="dir in files.filter(f => f.type === 'dir').reverse()">
-            <li>
-                <a x-bind:href="dir.path" x-text="dir.name"></a>
-            </li>
-        </template>
-    </ul>
+    <template x-if="files">
+        <ul>
+            <template x-for="dir in files.filter(f => f.type === 'dir').reverse()">
+                <li>
+                    <a x-bind:href="dir.path" x-text="dir.name"></a>
+                </li>
+            </template>
+        </ul>
+    </template>
 </div>
 
 <div x-data="{ repo: null }"
