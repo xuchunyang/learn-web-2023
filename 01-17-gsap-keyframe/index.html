@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP Keyframe</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #3a3a3a;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: hotpink;
+            margin-bottom: 200px;
+        }
+
+        .css {
+            animation: move 2s ease-out;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(200px, 0);
+            }
+            50% {
+                transform: translate(200px, 200px);
+            }
+            75% {
+                transform: translate(0, 200px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+</head>
+<body>
+<div class="box css"></div>
+<div class="box timeline"></div>
+<div class="box keyframe"></div>
+<script>
+    document.querySelector('.timeline').addEventListener('click', () => {
+        const tl = gsap.timeline();
+        tl
+            .to('.timeline', {x: 200})
+            .to('.timeline', {y: 200})
+            .to('.timeline', {x: 0})
+            .to('.timeline', {y: 0});
+    });
+
+    document.querySelector('.keyframe').addEventListener('click', () => {
+        gsap.to('.keyframe', {
+            keyframes: {
+                x: [0, 200, 200, 0, 0],
+                y: [0, 0, 200, 200, 0],
+                ease: 'power1.inOut',
+            },
+            duration: 2,
+        });
+    });
+
+</script>
+</body>
+</html>
