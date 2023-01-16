@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GSAP Stagger</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
+            padding-bottom: 50vh;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #363636;
+                color: #fff;
+            }
+        }
+
+        .box {
+            margin-bottom: 1rem;
+            width: 100px;
+            height: 100px;
+            background-color: #36b739;
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+        }
+
+        .line {
+            position: fixed;
+            top: 0;
+            left: 500px;
+            width: 1px;
+            height: 100%;
+            background-color: #6e6e6e;
+            z-index: -1;
+        }
+
+        output {
+            box-sizing: border-box;
+            position: fixed;
+            border-left: 1px solid #6e6e6e;
+            width: 25%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            overflow: scroll;
+            z-index: -1;
+        }
+
+        output p {
+            font-size: 16px;
+            padding-bottom: 1em;
+            border-bottom: 1px solid #6e6e6e;
+        }
+
+        .boxes {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 50px;
+            justify-content: start;
+            flex-wrap: wrap;
+            margin: 50px;
+        }
+
+        .boxes .box {
+            margin: 0;
+            width: 50px;
+            height: 50px;
+        }
+
+        .boxes2 {
+            justify-content: center;
+            border-top: 1px solid #6c6c6c;
+            gap: 50px;
+            margin: 0;
+            padding-top: 50vh;
+        }
+
+        .boxes2 .box {
+            opacity: 0;
+            width: 100px;
+            height: 100px;
+        }
+
+        .menu:not(.open) {
+            /* NOTE use with gsap's autoAlpha */
+            /*visibility: hidden;*/
+            display: none;
+            /*transform: translateY(-100%);*/
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: #212222;
+        }
+
+        .menu .inner {
+            height: 100%;
+            display: grid;
+            place-items: center;
+        }
+
+        .menu .inner .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .menu .inner .buttons button {
+            border: 0;
+            width: 200px;
+            background-color: #626262;
+            color: #fff;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 16px;
+            line-height: 1.5;
+            letter-spacing: 1px;
+        }
+
+        .one-dimensional-boxes {
+            margin: 2rem 0 200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .one-dimensional-boxes .box {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            margin: 0;
+        }
+
+        .two-dimensional-boxes {
+            display: grid;
+            grid-template-columns: repeat(11, auto);
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .two-dimensional-boxes .box {
+            margin: 0;
+            width: 55px;
+            height: 55px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+</head>
+<body>
+
+<div class="line"></div>
+<output></output>
+
+<div class="box a">A</div>
+<div class="box b">B</div>
+<script>
+    const debug = (msg) => {
+        const para = document.createElement('p');
+        // para.textContent = Date.now() + ': ' + msg;
+        para.textContent = msg;
+        document.querySelector('output').appendChild(para);
+    }
+    document.querySelector('.a').addEventListener('click', () => {
+        gsap.to('.a', {
+            x: '+=100',
+            rotation: '+=360',
+            duration: 1,
+            ease: 'power1.out',
+        });
+    });
+
+    const tweenB = gsap.to('.b', {
+        paused: true,
+        x: 400,
+        rotation: 360,
+        duration: 2,
+        ease: 'none',
+        // onUpdate: () => console.log(tweenB.progress().toFixed(2))
+    });
+    document.querySelector('.b').addEventListener('click', () => {
+        if (tweenB.isActive()) {
+            debug('b is active, skipping...');
+            return;
+        }
+        if (tweenB.progress() === 1.0) {
+            tweenB.reverse();
+        } else {
+            tweenB.play();
+        }
+    });
+</script>
+
+<div class="boxes">
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+</div>
+<script>
+    gsap
+        .to('.boxes .box', {
+            rotation: 360,
+            skewX: 10,
+            skewY: 10,
+            // borderRadius: 50,
+            duration: 0.5,
+            stagger: 0.5,
+        })
+        .then((tween) => {
+            // console.log(tween);
+            tween.revert();
+            // tween.reverse();
+        });
+</script>
+
+<div class="boxes boxes2">
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+</div>
+<script>
+    document.querySelectorAll('.boxes2 .box').forEach((value, key) => {
+        const colors = ['#00429d', '#2e59a8', '#4771b2', '#5d8abd', '#73a2c6', '#8abccf', '#a5d5d8', '#c5eddf', '#ffffe0'];
+        value.style.backgroundColor = colors[(key + 1) % colors.length];
+    });
+
+    const observer = new IntersectionObserver((entries, self) => {
+        const targets = entries
+            .map(entry => {
+                if (entry.isIntersecting) {
+                    self.unobserve(entry.target);
+                    return entry.target;
+                }
+            })
+            .filter(val => val);
+        console.log(targets);
+        if (targets.length > 0) {
+            gsap.to(targets, {
+                opacity: 1,
+                stagger: 0.1,
+            });
+        }
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0,
+    });
+    document.querySelectorAll('.boxes2 .box').forEach(box => {
+        observer.observe(box);
+    });
+</script>
+
+<button class="open-menu">Open Menu</button>
+
+<div class="menu">
+    <div class="inner">
+        <div class="buttons">
+            <button>New Game</button>
+            <button>Options</button>
+            <button>Credits</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const menu = document.querySelector('.menu');
+    document.querySelector('.open-menu').addEventListener('click', (event) => {
+        event.target.disabled = true;
+        menu.classList.add('open');
+        gsap.set('.menu button', {
+            y: -200,
+            opacity: 0,
+        });
+        gsap.from(menu, {
+            // yPercent: -100,
+            duration: 0.5,
+        }).then((self) => {
+            gsap.to('.menu button', {
+                // y: 0,
+                opacity: 1,
+                // ease: 'back.in',
+                stagger: 0.1,
+            });
+            self.revert();
+            event.target.disabled = false;
+        });
+    });
+    menu.addEventListener('click', () => {
+        gsap.to(menu, {
+            yPercent: -100,
+            duration: 0.5,
+        }).then((self) => {
+            menu.classList.remove('open');
+            self.revert();
+        });
+    });
+</script>
+
+<div class="one-dimensional-boxes">
+    <div class="box" style="background-color: #c95a3f"></div>
+    <div class="box" style="background-color: #d15eb4"></div>
+    <div class="box" style="background-color: #754ed5"></div>
+    <div class="box" style="background-color: #336fd5"></div>
+    <div class="box" style="background-color: #66cbd3"></div>
+    <div class="box" style="background-color: #5aa04d"></div>
+    <div class="box" style="background-color: #75c34f"></div>
+
+    <div class="box" style="background-color: #87c74f"></div>
+
+    <div class="box" style="background-color: #75c34f"></div>
+    <div class="box" style="background-color: #5aa04d"></div>
+    <div class="box" style="background-color: #66cbd3"></div>
+    <div class="box" style="background-color: #336fd5"></div>
+    <div class="box" style="background-color: #754ed5"></div>
+    <div class="box" style="background-color: #d15eb4"></div>
+    <div class="box" style="background-color: #c95a3f"></div>
+</div>
+<script>
+    gsap.to('.one-dimensional-boxes .box', {
+        y: 100,
+        duration: 0.5,
+        stagger: {
+            each: 0.2,
+            from: 'center',
+            ease: 'power2.out',
+        },
+    });
+</script>
+
+<div class="two-dimensional-boxes"></div>
+<script>
+    for (let i = 0; i < 5 * 11; i++) {
+        const box = document.createElement('div');
+        box.classList.add('box');
+        document
+            .querySelector('.two-dimensional-boxes')
+            .appendChild(box);
+    }
+
+    gsap.to('.two-dimensional-boxes .box', {
+        autoAlpha: 1,
+        scale: 0.1,
+        repeat: -1,
+        yoyo: true,
+        duration: 0.3,
+        stagger: {
+            // each: 0.3,
+            // amount: 0.3 * 55,
+            each: 0.1,
+            from: 'center',
+            grid: 'auto',
+            // axis: 'y',
+        },
+    });
+</script>
+</body>
+</html>
