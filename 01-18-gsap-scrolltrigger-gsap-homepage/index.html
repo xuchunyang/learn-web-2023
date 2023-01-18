@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GSAP</title>
+    <style>
+        body {
+            background-color: #3b3b3b;
+            padding: 110vh 0;
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .card {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 5px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+</head>
+<body>
+<section style="padding: calc(10vh + 2rem) 0; background-color: #b25f5f">
+    <div class="card">
+        <img src="https://picsum.photos/500/300" alt="" width="500" height="300">
+    </div>
+</section>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const animate = (elem, direction) => {
+        gsap.fromTo(elem, {
+            autoAlpha: 0,
+            y: direction * 100,
+        }, {
+            duration: 1.25,
+            autoAlpha: 1,
+            ease: 'expo',
+            y: 0,
+            overwrite: 'auto',
+        });
+    }
+    const hide = (elem) => {
+        gsap.set(elem, {autoAlpha: 0});
+    }
+
+    const elem = document.querySelector('.card');
+    gsap.set(elem, {willChange: 'transform, opacity'});
+    // hide(elem);
+    ScrollTrigger.create({
+        trigger: elem,
+        onEnter: () => {
+            console.log('onEnter');
+            animate(elem, 1);
+        },
+        onLeave: () => {
+            console.log('onLeave');
+            hide(elem);
+        },
+        onEnterBack: () => {
+            console.log('onEnterBack');
+            animate(elem, -1);
+        },
+    });
+</script>
+</body>
+</html>
