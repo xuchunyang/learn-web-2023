@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Swiper + GSAP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <style>
+        :root {
+            --swiper-theme-color: #271370;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            height: 100%;
+            font-family: sans-serif;
+            background-color: rgb(54, 54, 52);
+        }
+
+        .container {
+            width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .swiper {
+            padding-top: 50px;
+        }
+
+        .swiper .swiper-slide {
+            height: 300px;
+            display: grid;
+            place-items: center;
+            background-color: rgba(85, 54, 176, 0.89);
+            color: #fff;
+        }
+
+        .swiper .swiper-slide:nth-child(2) {
+            background-color: rgba(31, 115, 21, 0.89);
+        }
+
+        .swiper .swiper-slide:nth-child(3) {
+            background-color: rgba(86, 9, 70, 0.89);
+        }
+
+        .swiper .swiper-slide h1 {
+            margin-bottom: 0;
+        }
+
+        .swiper .swiper-slide p {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="swiper swiper1">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 1</h1>
+                    <p>This is the first slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 2</h1>
+                    <p>This is the second slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 3</h1>
+                    <p>This is the third slide.</p>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <div class="swiper swiper2">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 1</h1>
+                    <p>This is the first slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 2</h1>
+                    <p>This is the second slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 3</h1>
+                    <p>This is the third slide.</p>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+<script>
+    const swiper1 = new Swiper('.swiper1', {
+        // 过渡耗时 2s
+        speed: 2000,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        // 一切事件
+        onAny: function (eventName, ...args) {
+            // console.log('Event: ', eventName);
+            // console.log('Event data: ', args);
+        },
+        on: {
+            slideChange: function (self) {
+                console.log("slideChange");
+                const activeSlide = self.slides[self.activeIndex];
+                console.log(activeSlide);
+                gsap.set(activeSlide.querySelector('.content'), {
+                    autoAlpha: 0,
+                    x: 100,
+                });
+            },
+            slideChangeTransitionStart: function (self) {
+                console.log("slideChangeTransitionStart");
+                const activeSlide = self.slides[self.activeIndex];
+                gsap.to(activeSlide.querySelector('.content'), {
+                    autoAlpha: 1,
+                    x: 0,
+                    duration: 0.5,
+                    // 延迟 1s 造成 parallax 效果
+                    delay: 1,
+                });
+            },
+        }
+    });
+
+    const swiper2 = new Swiper('.swiper2', {
+        // default 300
+        speed: 500,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        on: {
+            slideNextTransitionStart() {
+                gsap.set(this.slides[this.activeIndex].querySelectorAll('.content > *'), {
+                    autoAlpha: 0,
+                    x: 100,
+                });
+            },
+            slidePrevTransitionStart() {
+                gsap.set(this.slides[this.activeIndex].querySelectorAll('.content > *'), {
+                    autoAlpha: 0,
+                    x: -100,
+                });
+            },
+            slideChangeTransitionEnd() {
+                gsap.to(this.slides[this.activeIndex].querySelectorAll('.content > *'), {
+                    autoAlpha: 1,
+                    x: 0,
+                    duration: 1,
+                    stagger: 0.5,
+                });
+            },
+        },
+    });
+</script>
+</body>
+</html>
