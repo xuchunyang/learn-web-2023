@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>界面新闻 Swiper</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <style>
+        :root {
+            box-sizing: border-box;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+
+        .container {
+            max-width: 1162px;
+            margin-left: auto;
+            margin-right: auto;
+            overflow-x: hidden;
+        }
+
+        header {
+            border-top: 1px solid #000;
+            padding: 1rem 0;
+        }
+
+        .swiper {
+            overflow: visible;
+            width: 900px;
+            height: 560px;
+            --swiper-navigation-color: #ffffff;
+            --swiper-navigation-size: 30px;
+            margin-bottom: 24px;
+        }
+
+        img {
+            display: block;
+            user-select: none;
+            width: 900px;
+            height: 560px;
+            /*object-fit: cover;*/
+        }
+
+        .swiper-slide-next,
+        .swiper-slide-prev {
+            height: 496px;
+            margin-top: calc((560px - 496px) / 2);
+            overflow-y: hidden;
+            opacity: 0.9;
+        }
+
+        .swiper-slide-active {
+            box-shadow: 0 0 10px #153ec0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h2>正午</h2>
+    </header>
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div>
+                    <img src="167413364272743300_a900x560.jpg" alt="">
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div>
+                    <img src="167350269675722500_a900x560.png" alt="">
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div>
+                    <img src="167541823568991500_a900x560.jpg" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+
+<script>
+    new Swiper('.swiper', {
+        loop: true,
+        navigation: {
+            prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-button-next',
+        },
+    });
+</script>
+</body>
+</html>
