@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Alpinejs</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="dark:bg-gray-900 dark:text-white pb-[400px]">
+
+<main class="container mx-auto px-4 py-8 space-y-8">
+    <div x-data="{ show: false }">
+        <h1 class="text-lg mb-4">
+            1. Hide and show with <code class="dark:bg-gray-700 px-2 py-0.5 rounded">x-show</code>
+        </h1>
+        <button class="border px-3 py-1" @click="show = !show">Toggle</button>
+        <p x-transition.opacity x-show="show">Hello AlpineJS!</p>
+    </div>
+
+    <div x-data="{ tab: 'html' }">
+        <h1 class="text-lg mb-4">
+            2. Switch tabs
+        </h1>
+        <ul class="flex items-center">
+            <li class="px-4 py-1.5 border-t border-b border-r first:border-l cursor-pointer"
+                :class="{ 'dark:bg-green-900': tab === 'html' }"
+                @mouseenter="tab = 'html'">
+                index.html
+            </li>
+            <li class="px-4 py-1.5 border-t border-b border-r first:border-l cursor-pointer"
+                :class="{ 'dark:bg-green-900': tab === 'js' }"
+                @mouseenter="tab = 'js'">
+                app.js
+            </li>
+            <li class="px-4 py-1.5 border-t border-b border-r first:border-l cursor-pointer"
+                :class="{ 'dark:bg-green-900': tab === 'css' }"
+                @mouseenter="tab = 'css'">
+                style.css
+            </li>
+        </ul>
+        <ul class="my-4 p-4 dark:bg-gray-800 min-h-[100px]">
+            <li x-transition.opacity x-show="tab === 'html'">This is the contents of index.html</li>
+            <li x-transition.opacity x-show="tab === 'js'">This is the contents of app.js</li>
+            <li x-transition.opacity x-show="tab === 'css'">This is the contents of style.css</li>
+        </ul>
+    </div>
+
+    <div>
+        <div x-data="{ todos: [
+    { title: '写一个 TODO 功能', done: true },
+    { title: 'popup', done: false },
+    { title: 'modal', done: true },
+    { title: 'menu', done: true },
+    { title: 'css transition', done: true },
+    { title: 'hover event', done: true },
+    { title: 'other staffs such as x-ref, x-teleport', done: false },
+] }" x-init="todos = todos.map(t => ({...t, editing: false}))">
+            <h3>3. Todo list
+                <span class="dark:text-green-500 tracking-widest font-medium">
+                <span x-text="todos.filter(t => t.done).length"></span>/<span x-text="todos.length"></span>
+            </span>
+            </h3>
+            <button @click="todos = todos.sort((a, b) => Math.random() < 0.5 ? 1 : -1)">
+                random sort
+            </button>
+            <input type="text" placeholder="Add todo..." class="dark:bg-gray-700 px-3 py-1.5 my-2 rounded"
+                   @keyup.enter="todos.push({ title: $el.value, done: false }); $el.value = ''">
+            <ul class="space-y-1">
+                <template x-for="todo in todos">
+                    <li class="flex gap-1 items-center">
+                        <input type="checkbox" x-model="todo.done">
+                        <div class="flex-1 px-3 py-1.5" @click="
+                        todo.editing = true;
+                        await $nextTick()
+                        $el.nextElementSibling.focus()
+                        // setTimeout(() => $el.nextElementSibling.focus(), 0);
+" x-show="!todo.editing" x-text="todo.title"></div>
+                        <input @click.outside="todo.editing = false"
+                               @keyup.enter="todo.editing = false"
+                               x-show="todo.editing" type="text"
+                               x-model="todo.title"
+                               class="dark:bg-gray-700 px-3 py-1.5 flex-1">
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </div>
+
+    <div x-data="{ open: false }">
+        <h1>4. modal</h1>
+        <button class="my-4 px-4 py-1.5 border rounded" @click="open = true">Open modal</button>
+        <div x-cloak x-show="open" class="fixed left-0 top-0 right-0 bottom-0">
+            <div class="relative h-full grid place-items-center">
+                <div @click="open = false" class="absolute left-0 top-0 right-0 bottom-0 bg-black/50"></div>
+                <div class="w-[600px] max-w-[90%] z-10 dark:bg-text-gray-700 border p-4 relative">
+                    <button class="absolute top-4 right-4" @click="open = false">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    This is the modal!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div x-data="{ open: false }">
+        <h1>5. menu</h1>
+        <div class="relative">
+            <button @click="open = !open" class="border p-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
+            <div class="absolute shadow-lg bg-gray-700" x-cloak x-show="open" @click.outside="open = false">
+                <ul class="divide-y divide-white/20">
+                    <li>
+                        <button class="w-full px-4 py-2" @click="alert($el.textContent)">One</button>
+                    </li>
+                    <li>
+                        <button class="w-full px-4 py-2" @click="alert($el.textContent)">Two</button>
+                    </li>
+                    <li>
+                        <button class="w-full px-4 py-2" @click="alert($el.textContent)">Three</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="h-[50px] dark:bg-green-900/50"></div>
+    </div>
+</main>
+
+
+</body>
+</html>
