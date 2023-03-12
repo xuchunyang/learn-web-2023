@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hello filepond</title>
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+          rel="stylesheet">
+</head>
+<body>
+
+<form>
+    <input type="file" class="filepond"
+           multiple
+           required
+           data-allow-reorder="true"
+           data-max-file-size="2MB"
+           data-max-files="3">
+    <input type="submit">
+</form>
+
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script>
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+    );
+
+    FilePond.create(document.querySelector('.filepond'), {
+        labelIdle: '拖拽上传 or <span class="filepond--label-action"> 浏览 </span>',
+        files: [
+            {
+                source: 'a.jpg',
+                options: {
+                    type: 'local',
+                    // file: {
+                    //     name: 'a.jpg',
+                    //     size: 113179,
+                    //     type: 'image/jpeg',
+                    // },
+                },
+            },
+        ],
+        server: {
+            process: 'file-upload.php',
+            fetch: null,
+            revert: null,
+            load: './uploads/',
+        },
+    });
+</script>
+</body>
+</html>
