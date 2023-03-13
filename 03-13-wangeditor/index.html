@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wang Editor</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link href="https://unpkg.com/@wangeditor/editor@latest/dist/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .editor—wrapper {
+            border: 1px solid #ccc;
+            z-index: 100; /* 按需定义 */
+        }
+
+        .toolbar-container {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .editor-container {
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<div x-data="{
+    html: '<p>hello world!</p>',
+}"
+     x-init="(() => {
+console.log('x-init called');
+
+const editor = wangEditor.createEditor({
+    html,
+    selector: $refs.editor,
+    config: {
+        onChange: (self) => {
+            html = self.getHtml();
+        },
+        MENU_CONF: {
+            uploadImage: {
+                server: 'file-upload.php',
+            },
+        },
+    },
+    mode: 'default',
+});
+
+wangEditor.createToolbar({
+    editor,
+    selector: $refs.toolbar,
+    config: {
+    },
+    mode: 'default',
+});
+
+})()">
+    <input type="hidden" :value="JSON.stringify({html})">
+    <div class="editor—wrapper">
+        <div x-ref="toolbar" class="toolbar-container"></div>
+        <div x-ref="editor" class="editor-container"></div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/@wangeditor/editor@latest/dist/index.js"></script>
+</body>
+</html>
