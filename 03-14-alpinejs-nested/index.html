@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alpinejs nested components</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="//unpkg.com/uuid@8.3.0/dist/umd/uuidv4.min.js"></script>
+    <style>
+        * + * {
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+
+<div x-data="{
+posts: [
+{
+    id: 1,
+    title: 'one',
+    values: [
+        { id: 1, title: 'a' },
+        { id: 2, title: 'bb' },
+        { id: 3, title: 'ccc' },
+    ],
+},
+{
+    id: 2,
+    title: 'two',
+    values: [
+        { id: 1, title: 'two 1' },
+        { id: 2, title: 'two 2' },
+        { id: 3, title: 'two 3' },
+    ],
+},
+]
+}">
+    <pre x-text="JSON.stringify(posts, null, 2)"></pre>
+    <button @click="posts.push({ id: uuidv4(), title: '', values: []})">Add</button>
+    <ul>
+        <template x-for="item in posts" :key="item.id">
+            <li>
+                <input x-model="item.title">
+                <button @click="posts = posts.filter(elt => elt !== item)">Remove</button>
+                <div>
+                    <button @click="item.values.push({ id: uuidv4(), title: ''})">Add</button>
+                </div>
+                <ul>
+                    <template x-for="i in item.values">
+                        <li>
+                            <input x-model="i.title">
+                            <button @click="item.values = item.values.filter(elt => elt !== i)">Remove</button>
+                        </li>
+                    </template>
+                </ul>
+            </li>
+        </template>
+    </ul>
+</div>
+
+<script>
+    console.log(uuidv4());
+</script>
+
+</body>
+</html>
