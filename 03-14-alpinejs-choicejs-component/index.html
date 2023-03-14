@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alpinejs Choice-js component</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            max-width: 60em;
+            margin: 1rem auto;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <h1>Vanilla</h1>
+    <select>
+        <option value="">This is a placeholder</option>
+        <option>one</option>
+        <option>two</option>
+        <option>three</option>
+    </select>
+</div>
+
+<div>
+    <h1>Alpinejs</h1>
+    <div x-data="{
+selected: '3',
+options: [
+    // ...[{ value: 1, label: 'one' }, { value: 2, label: 'two' }],
+    ...[...Array(10)].map((_, i) => ({ value: `${i+1}`, label: `item ${i+1}` })),
+],
+}"
+         x-init="
+         new Choices($refs.select, {
+            allowHTML: false,
+            // choices: [{ value: 1, label: 'one' }, { value: 2, label: 'two' }],
+            choices: options,
+         })
+         .setChoiceByValue(selected);
+
+         $refs.select.addEventListener('choice', (c) => {
+            selected = c.detail.choice.value;
+            console.log(c.detail.choice.label);
+         });
+">
+        <pre x-text="JSON.stringify({selected, options}, null, 2)"></pre>
+        <select x-ref="select">
+            <option value="">This is a placeholder</option>
+        </select>
+    </div>
+</div>
+
+
+
+<script>
+    const choice = new Choices(document.querySelector('select'), {
+        allowHTML: false,
+        shouldSort: false,
+    });
+</script>
+</body>
+</html>
