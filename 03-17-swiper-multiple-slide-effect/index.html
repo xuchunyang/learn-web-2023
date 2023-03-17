@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Swiper</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <style>
+        :root {
+            --swiper-theme-color: #271370;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            height: 100%;
+            font-family: sans-serif;
+            background-color: rgb(54, 54, 52);
+        }
+
+        .container {
+            max-width: 90%;
+            width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .swiper {
+            height: 300px;
+            margin-top: 100px;
+            background-color: #ffffff;
+        }
+
+        .swiper .swiper-slide {
+            height: 300px;
+            display: grid;
+            place-items: center;
+            background-color: rgba(85, 54, 176, 0.89);
+            color: #fff;
+        }
+
+        .swiper .swiper-slide:nth-child(2) {
+            background-color: rgba(31, 115, 21, 0.89);
+        }
+
+        .swiper .swiper-slide:nth-child(3) {
+            background-color: rgba(86, 9, 70, 0.89);
+        }
+
+        .swiper .swiper-slide h1 {
+            margin-bottom: 0;
+        }
+
+        .swiper .swiper-slide p {
+            margin-top: 5px;
+        }
+
+        .swiper1 .swiper-pagination-bullet {
+            width: auto;
+            height: auto;
+            min-width: 18px;
+            min-height: 18px;
+            background: none;
+        }
+
+        .swiper1 {
+            --swiper-navigation-size: 24px;
+        }
+
+        .swiper1 .swiper-button-prev {
+            margin: 0;
+            transform: rotate(90deg) translateX(-100%);
+            left: 0;
+            right: 0;
+            top: 0;
+        }
+
+        .swiper1 .swiper-button-next {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="swiper swiper1">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 1</h1>
+                    <p>This is the first slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 2</h1>
+                    <p>This is the second slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 3</h1>
+                    <p>This is the third slide.</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content">
+                    <h1>Slide 4</h1>
+                    <p>This is the third slide.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    new Swiper('.swiper', {
+        // fade effect won't work when slidesPerView > 1
+        slidesPerView: 2,
+        effect: 'fade',
+    });
+</script>
+</body>
+</html>
