@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tencent Cloud VOD upload</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        img,
+        video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #player-container-id {
+            width: 100%;
+            max-width: 100%;
+            height: 0;
+            padding-top: 56.25%;
+        }
+    </style>
+</head>
+<body>
+<div x-data="{
+tcVod: null,
+doneResult: null,
+onSubmit(e) {
+    const uploader = this.tcVod.upload({
+        mediaFile: e.target.video.files[0],
+        coverFile: e.target.cover.files[0],
+    });
+
+    uploader.on('media_progress', function (info) {
+        console.log(info.percent) // 进度
+    });
+
+    // 回调结果说明
+    // type doneResult = {
+    //   fileId: string,
+    //   video: {
+    //     url: string
+    //   },
+    //   cover: {
+    //     url: string
+    //   }
+    // }
+    uploader.done().then((doneResult) => {
+        // deal with doneResult
+        console.log(doneResult);
+        this.doneResult = doneResult;
+    }).catch((err) => {
+        // deal with error
+        console.log(err);
+    });
+},
+onInit() {
+    const getSignature = async () => {
+        const response = await fetch('/getSignature.php')
+        return await response.text();
+    };
+
+    this.tcVod = new TcVod.default({
+        getSignature,
+    });
+},
+}"
+     x-init="onInit()">
+    <form @submit.prevent="onSubmit">
+        <div>
+            <label for="video">Video</label>
+            <input id="video" name="video" type="file" accept="video/*" required>
+        </div>
+        <div>
+            <label for="cover">Cover</label>
+            <input id="cover" name="cover" type="file" accept="image/*" required>
+        </div>
+        <div>
+            <button>Upload</button>
+        </div>
+    </form>
+    <template x-if="doneResult">
+        <div>
+            <img :src="doneResult.cover.url" alt="cover">
+            <video :src="doneResult.video.url" controls></video>
+        </div>
+    </template>
+</div>
+
+<link href="https://web.sdk.qcloud.com/player/tcplayer/release/v4.7.2/tcplayer.min.css" rel="stylesheet"/>
+<script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.7.2/tcplayer.v4.7.2.min.js"></script>
+<div style="max-width: 60%; margin: 1rem auto; border: 1px solid #000">
+    <video id="player-container-id" preload="auto" playsinline webkit-playsinline>
+    </video>
+</div>
+<script>
+    const player = TCPlayer('player-container-id', {}); // player-container-id 为播放器容器 ID，必须与 html 中一致
+    player.src('https://1258907199.vod2.myqcloud.com/8832ecbcvodsh1258907199/443231ae243791580725554402/KvlngbhUFc8A.mp4'); // url 播放地址
+</script>
+
+<div style="margin: 1rem 0">
+    <input id="basic-upload-input" type="file" accept="video/*">
+</div>
+
+<script src="https://cdn-go.cn/cdn/vod-js-sdk-v6/latest/vod-js-sdk-v6.js"></script>
+<script>
+    document.querySelector('#basic-upload-input')
+        .addEventListener('change', (event) => {
+            if (!event.target.files.length) return;
+
+            const getSignature = async () => {
+                const response = await fetch('/getSignature.php')
+                return await response.text();
+            };
+
+            const tcVod = new TcVod.default({
+                getSignature,
+            });
+
+            const uploader = tcVod.upload({
+                mediaFile: event.target.files[0], // 媒体文件（视频或音频或图片），类型为 File
+            });
+
+            uploader.on('media_progress', function (info) {
+                console.log(info.percent) // 进度
+            });
+
+            // 回调结果说明
+            // type doneResult = {
+            //   fileId: string,
+            //   video: {
+            //     url: string
+            //   },
+            //   cover: {
+            //     url: string
+            //   }
+            // }
+            uploader.done().then(function (doneResult) {
+                // deal with doneResult
+                console.log(doneResult);
+            }).catch(function (err) {
+                // deal with error
+                console.log(err);
+            });
+        });
+
+</script>
+</body>
+</html>
