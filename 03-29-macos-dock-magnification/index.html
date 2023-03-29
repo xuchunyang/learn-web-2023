@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>macOS Dock Magnification</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        ol {
+            list-style: none;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-image: linear-gradient(109.6deg, rgba(25, 170, 209, 1) 11.3%, rgba(21, 65, 249, 1) 69.9%);
+        }
+
+        .dock {
+            background-color: rgba(0, 0, 0, 0.4);
+            height: 120px;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dock li {
+            --scale: 1;
+            font-size: calc(5rem * var(--scale));
+            transform: translateY(calc(-(var(--scale) - 1) / 2 * 100 * 1%));
+            transition: all 15ms ease-out;
+            padding: 0 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<ol class="dock">
+    <li>😃</li>
+    <li>😊</li>
+    <li>😜</li>
+    <li>😍</li>
+    <li>🤩</li>
+    <li>🥳</li>
+    <li>🥶</li>
+</ol>
+
+<script>
+    const items = document.querySelectorAll('.dock li');
+    items.forEach((item) => {
+        item.addEventListener('mousemove', (event) => {
+            const rect = item.getBoundingClientRect();
+            const offset = Math.abs(event.clientX - rect.left) / rect.width;
+
+            const scale = 0.6;
+            const prevEl = item.previousElementSibling || null;
+            const nextEl = item.nextElementSibling || null;
+
+            resetScale();
+
+            item.style.setProperty('--scale', 1 + scale);
+
+            if (prevEl) {
+                prevEl.style.setProperty('--scale', 1 + scale * (1 - offset));
+            }
+
+            if (nextEl) {
+                nextEl.style.setProperty('--scale', 1 + scale * offset);
+            }
+        });
+    });
+
+
+    const resetScale = () => {
+        items.forEach(item => {
+            item.style.setProperty('--scale', 1);
+        });
+    };
+
+    document.querySelector('.dock').addEventListener('mouseleave', () => {
+        resetScale();
+    });
+</script>
+</body>
+</html>
