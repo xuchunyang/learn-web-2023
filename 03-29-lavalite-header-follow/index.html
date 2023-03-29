@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>https://lavalite.org/ Header</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #a66060;
+            background-image: linear-gradient(150deg, #f05138 15%, #ee3a5b 70%, #ed1375 94%);
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        header {
+            max-width: 1200px;
+            padding: 1rem;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        ol {
+            list-style: none;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dropdown-wrapper {
+            position: absolute;
+            transition: all 300ms;
+        }
+
+        .dropdown {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: #fff;
+            color: #000;
+            opacity: 0;
+            pointer-events: none;
+            width: max-content;
+            transition: opacity 300ms;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dropdown ol {
+            list-style: none;
+        }
+
+        .dropdown ol li {
+            padding: 10px 20px;
+        }
+    </style>
+
+    <div style="position: relative" x-data="{
+activeIndex: null,
+left: 0,
+onEnter(el, index) {
+    this.activeIndex = index;
+    const rect = el.getBoundingClientRect();
+    this.left = rect.left;
+},
+    }" x-init="
+left = $refs.first.getBoundingClientRect().left;
+">
+        <header>
+            <a href="#">
+                <img src="logo.svg" alt="" width="150" height="40">
+            </a>
+            <ol class="nav">
+                <li><a @mouseenter="onEnter($el, 1)" href="#" x-ref="first">Products</a></li>
+                <li><a @mouseenter="onEnter($el, 2)" href="#">Developers</a></li>
+                <li><a @mouseenter="onEnter($el, 3)" href="#">Contact</a></li>
+            </ol>
+        </header>
+        <ol class="dropdown-wrapper" :style="{ left: `${left}px` }">
+            <li class="dropdown" :class="{ active: activeIndex === 1 }">
+                <ol>
+                    <li>Product 1</li>
+                    <li>Product 2</li>
+                    <li>Product 3</li>
+                    <li>Product 4</li>
+                    <li>Product 5</li>
+                    <li>Product 6</li>
+                </ol>
+            </li>
+            <li class="dropdown" :class="{ active: activeIndex === 2 }">
+                <ol>
+                    <li>Developers 1</li>
+                    <li>Developers 2</li>
+                    <li>Developers 3</li>
+                    <li>Developers 4</li>
+                </ol>
+            </li>
+            <li class="dropdown" :class="{ active: activeIndex === 3 }">
+                <ol>
+                    <li>Contact 1</li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <script src="//unpkg.com/alpinejs" defer></script>
+</head>
+</html>
