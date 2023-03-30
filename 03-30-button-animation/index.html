@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Button Animation</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        background-color: #e0e5ec;
+      }
+
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+      }
+
+      button {
+        --width: 280px;
+        --height: 80px;
+        font-size: 2rem;
+        font-family: sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background-color: #0aabe0;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 500;
+        position: relative;
+        width: var(--width);
+        height: var(--height);
+        display: grid;
+        place-items: center;
+        transition: all 150ms;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #fff;
+        color: #0aabe0;
+      }
+
+      .line {
+        transition: all 300ms;
+        transition-delay: 150ms;
+        background-color: #0aabe0;
+      }
+
+      .top {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 2px;
+      }
+
+      .right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 0;
+      }
+
+      .bottom {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 0;
+      }
+
+      .left {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 2px;
+        height: 0;
+      }
+
+      button:hover .top {
+        width: var(--width);
+      }
+
+      button:hover .right {
+        height: var(--height);
+      }
+
+      button:hover .bottom {
+        width: var(--width);
+      }
+
+      button:hover .left {
+        height: var(--height);
+      }
+    </style>
+  </head>
+  <body>
+    <button>
+      <div class="line top"></div>
+      <div class="line right"></div>
+      <div class="line bottom"></div>
+      <div class="line left"></div>
+      <span>Read More</span>
+    </button>
+
+    <a
+      href="https://codepen.io/yuhomyan/details/OJMejWJ"
+      style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        text-decoration: none;
+        color: #666;
+        display: block;
+      "
+      >https://codepen.io/yuhomyan/details/OJMejWJ</a
+    >
+  </body>
+</html>
