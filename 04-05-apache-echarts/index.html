@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apache ECharts</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #2f2f2f;
+            padding-top: 1rem;
+        }
+
+        .chart {
+            border: 1px solid #676767;
+            width: 600px;
+            height: 400px;
+            margin: 0 auto 30px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chart1" class="chart"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+<script>
+    echarts
+        .init(document.querySelector('#chart1'), 'dark')
+        .setOption({
+            title: {
+                text: 'Hello ECharts',
+            },
+            tooltip: {},
+            legend: {
+                data: ['销量'],
+            },
+            xAxis: {
+                data: ['童鞋', '内裤', 'T-shirt', '短裤', '高跟鞋', '袜子'],
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: '销量',
+                    type: 'bar',
+                    data: [5, 20, 36, 10, 10, 20],
+                },
+            ],
+        });
+</script>
+</body>
+</html>
