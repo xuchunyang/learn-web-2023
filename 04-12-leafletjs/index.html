@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello leafletjs</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #ebebeb;
+        }
+
+        #map {
+            height: 100vh;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #888;
+        }
+
+        .custom-title {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    const map = L.map('map').setView([34.3416, 108.9398], 5);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    const timetable = [
+        {
+            id: 1,
+            name: '上海',
+            loc: [31.230416, 121.4737],
+            day: '第1天',
+            arrive_time: '20:08',
+            leave_time: '---',
+            stop_duration: '---'
+        },
+        {
+            id: 2,
+            name: '无锡',
+            loc: [31.574729, 120.290849],
+            day: '第1天',
+            arrive_time: '21:20',
+            leave_time: '21:23',
+            stop_duration: '3分'
+        },
+        {
+            id: 3,
+            name: '南京',
+            loc: [32.060973, 118.791645],
+            day: '第1天',
+            arrive_time: '22:54',
+            leave_time: '23:01',
+            stop_duration: '7分'
+        },
+        {
+            id: 4,
+            name: '蚌埠',
+            loc: [32.934036, 117.35708],
+            day: '第2天',
+            arrive_time: '00:33',
+            leave_time: '00:39',
+            stop_duration: '6分'
+        },
+        {
+            id: 5,
+            name: '徐州',
+            loc: [34.267552, 117.125339],
+            day: '第2天',
+            arrive_time: '02:04',
+            leave_time: '02:12',
+            stop_duration: '8分'
+        },
+        {
+            id: 6,
+            name: '郑州',
+            loc: [34.7466, 113.625368],
+            day: '第2天',
+            arrive_time: '05:07',
+            leave_time: '05:14',
+            stop_duration: '7分'
+        },
+        {
+            id: 7,
+            name: '西安',
+            loc: [34.341568, 108.940174],
+            day: '第2天',
+            arrive_time: '11:14',
+            leave_time: '11:22',
+            stop_duration: '8分'
+        },
+        {
+            id: 8,
+            name: '咸阳',
+            loc: [34.329605, 108.708991],
+            day: '第2天',
+            arrive_time: '11:38',
+            leave_time: '11:40',
+            stop_duration: '2分'
+        },
+        {
+            id: 9,
+            name: '兰州',
+            loc: [36.061089, 103.834304],
+            day: '第2天',
+            arrive_time: '18:17',
+            leave_time: '18:34',
+            stop_duration: '17分'
+        },
+        {
+            id: 10,
+            name: '西宁',
+            loc: [36.623673, 101.784573],
+            day: '第2天',
+            arrive_time: '21:07',
+            leave_time: '21:27',
+            stop_duration: '20分'
+        },
+        {
+            id: 11,
+            name: '德令哈',
+            loc: [37.374555, 97.360985],
+            day: '第3天',
+            arrive_time: '01:29',
+            leave_time: '01:31',
+            stop_duration: '2分'
+        },
+        {
+            id: 12,
+            name: '格尔木',
+            loc: [36.40239, 94.903945],
+            day: '第3天',
+            arrive_time: '04:15',
+            leave_time: '04:40',
+            stop_duration: '25分'
+        },
+        {
+            id: 13,
+            name: '安多',
+            loc: [32.260299, 91.682847],
+            day: '第3天',
+            arrive_time: '12:38',
+            leave_time: '12:42',
+            stop_duration: '4分'
+        },
+        {
+            id: 14,
+            name: '那曲',
+            loc: [31.47614, 92.051239],
+            day: '第3天',
+            arrive_time: '14:24',
+            leave_time: '14:33',
+            stop_duration: '9分'
+        },
+        {
+            id: 15,
+            name: '拉萨',
+            loc: [29.652491, 91.17211],
+            day: '第3天',
+            arrive_time: '19:35',
+            leave_time: '19:35',
+            stop_duration: '---'
+        }
+    ];
+
+    for (const item of timetable) {
+        const marker = L.marker(item.loc).addTo(map);
+        const table = `<table>
+<tr><th>站次</th><td>${item.id}</td></tr>
+<tr><th>站名</th><td>${item.name}</td></tr>
+<tr><th>日期</th><td>${item.day}</td></tr>
+<tr><th>到达时间</th><td>${item.arrive_time}</td></tr>
+<tr><th>开车时间</th><td>${item.leave_time}</td></tr>
+<tr><th>停留时间</th><td>${item.stop_duration}</td></tr>
+</table>`;
+        marker.bindPopup(table);
+    }
+
+    const polyline = L.polyline(timetable.map(el => el.loc)).addTo(map);
+    map.fitBounds(polyline.getBounds());
+
+    // TODO 如何加一个图示？如 上海到拉萨Z164火车时刻表
+</script>
+</body>
+</html>
