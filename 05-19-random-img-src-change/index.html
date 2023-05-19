@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Change img src randomly</title>
+</head>
+<body>
+<h1>每 3 秒随机轮换图片</h1>
+<ol style="list-style: none; display: grid; grid-template-columns: repeat(auto-fit, 200px); gap: 16px">
+    <li><img src="https://picsum.photos/seed/seed1/200" alt=""></li>
+    <li><img src="https://picsum.photos/seed/seed2/200" alt=""></li>
+    <li><img src="https://picsum.photos/seed/seed3/200" alt=""></li>
+    <li><img src="https://picsum.photos/seed/seed4/200" alt=""></li>
+    <li><img src="https://picsum.photos/seed/seed5/200" alt=""></li>
+</ol>
+
+<script>
+    const imgList = document.querySelectorAll('img');
+    let imgSrcList = [...imgList].map(elem => elem.src);
+    setInterval(() => {
+        imgSrcList = imgSrcList.sort(() => Math.random() >= 0.5 ? 1 : -1);
+        imgList.forEach((img, idx) => {
+            img.src = imgSrcList[idx];
+        });
+    }, 3000);
+</script>
+</body>
+</html>
