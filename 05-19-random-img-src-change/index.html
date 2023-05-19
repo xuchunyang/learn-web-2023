@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Change img src randomly</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
 </head>
 <body>
 <h1>每 3 秒随机轮换图片</h1>
@@ -21,6 +22,15 @@
         imgSrcList = imgSrcList.sort(() => Math.random() >= 0.5 ? 1 : -1);
         imgList.forEach((img, idx) => {
             img.src = imgSrcList[idx];
+            gsap.set(img, {
+                scale: 0,
+                opacity: 0
+            })
+        });
+        gsap.to('img', {
+            delay: 1,
+            scale: 1,
+            opacity: 1,
         });
     }, 3000);
 </script>
