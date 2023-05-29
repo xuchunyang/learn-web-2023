@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 2 FilePond</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/filepond/dist/filepond.min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css">
+    <style>
+        .filepond--item {
+            width: calc(20% - 0.5em);
+        }
+
+        .filepond--root {
+            //max-height: 30em;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+<!--    <pre v-text="JSON.stringify(exampleValue, null, 2)"></pre>-->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px">
+        <div style="padding:2rem;" v-for="file in exampleValue" :key="file.id">
+            <div>Name: {{ file.filename }}</div>
+            <div>ID: {{ file.id }}</div>
+            <div>ServerID: {{ file.serverId }}</div>
+            <div>Size: {{ file.fileSize }}</div>
+            <div>Extension: {{ file.fileExtension }}</div>
+        </div>
+    </div>
+
+    <file-pond
+            ref="pond"
+            :allow-multiple="true"
+            :max-files="10"
+            :allow-reorder="true"
+            :accepted-file-types="['image/jpeg', 'image/png']"
+            :max-file-size="'500KB'"
+            :server="server"
+            :files="files"
+            @processfile="test"
+            v-model="exampleValue"
+            :image-preview-max-height="120"
+    ></file-pond>
+</div>
+
+<script src="https://unpkg.com/vue@2"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size"></script>
+<script src="https://unpkg.com/filepond"></script>
+<script src="https://unpkg.com/vue-filepond@6"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                exampleValue: null,
+                server: {
+                    process: 'file-upload.php',
+                    fetch: null,
+                    revert: null,
+                    load: "./Uploads/"
+                },
+                files: [
+                    {
+                        source: 'a.jpg',
+                        options: {
+                            type: 'local',
+                            // file: {
+                            //     name: 'a.jpg',
+                            //     size: 113179,
+                            //     type: 'image/jpeg',
+                            // },
+                        },
+                    },
+                ],
+            };
+        },
+        methods: {
+            test(error, file) {
+                console.log(error || file.serverId);
+            },
+            handleFilePondUpdateFile(files) {
+                // console.log(files.map(item => item.serverId));
+            },
+            handleProcessFiles(files) {
+                console.log(this.$refs.pond.getFiles());
+                // console.log(files.map(item => item.serverId));
+            },
+        },
+        components: {
+            FilePond: vueFilePond.default(
+                FilePondPluginImagePreview,
+                FilePondPluginFileValidateType,
+                FilePondPluginFileValidateSize,
+            ),
+        },
+    });
+</script>
+
+</body>
+</html>
