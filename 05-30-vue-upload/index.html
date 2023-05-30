@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Upload</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #262626;
+            color: #fff;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        #app {
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <ol>
+        <li v-for="item in list" :key="item.id" style="border: 1px solid rgba(255, 255, 255, 0.4); padding: 8px">
+            <div>
+                <label>Title</label>
+                <input v-model="item.title">
+            </div>
+            <ol style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; list-style: none; padding: 0; margin: 20px 0">
+                <li v-for="(image, idx) in item.images">
+                    <img :src="image" :alt="image" width="300" height="200">
+                    <button @click="item.images = item.images.filter(img => img !== image)">Delete Image</button>
+                    <button @click="item.images = replaceImage(item.id, idx)">Replace
+                        Image
+                    </button>
+                </li>
+            </ol>
+            <button @click="addImage(item.images)">Add Image</button>
+        </li>
+    </ol>
+</div>
+
+<script src="https://unpkg.com/vue@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.1.0/uuidv4.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                message: 'Hello, World!',
+                list: [
+                    {
+                        id: uuidv4(),
+                        title: '诞生背景 #1',
+                        images: [
+                            'https://picsum.photos/300/200?1',
+                            'https://picsum.photos/300/200?2',
+                        ],
+                    },
+                ],
+            };
+        },
+        methods: {
+            // NOTE 这个函数不会触发更新，只有元素的增减才能
+            replaceImage(id, idx) {
+                const item = this.list.find((elt) => elt.id === id);
+                console.log(item);
+                item.images[idx] += '?';
+                return item.images;
+            },
+            addImage(images) {
+                images.push(`https://picsum.photos/300/200?${uuidv4()}`);
+            },
+        },
+    });
+</script>
+</body>
+</html>
