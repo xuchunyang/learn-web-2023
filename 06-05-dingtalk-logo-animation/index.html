@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DingTalk Logo 动画</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        background-color: #ebedf0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .logos-wrap {
+        padding: 1rem 0;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        gap: 20px;
+      }
+
+      .logos-wrap::before,
+      .logos-wrap::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: -15px;
+        top: -10px;
+        height: 120%;
+        width: 100px;
+        z-index: 2;
+        background-image: -webkit-linear-gradient(
+          left,
+          #ebedf0 20%,
+          rgba(235, 237, 240, 0)
+        );
+      }
+
+      .logos-wrap::after {
+        left: auto;
+        right: 0;
+        background-image: -webkit-linear-gradient(
+          right,
+          #ebedf0 20%,
+          rgba(235, 237, 240, 0)
+        );
+      }
+
+      .logos-wrap:hover .logos {
+        animation-play-state: paused;
+      }
+
+      .logos {
+        flex-shrink: 0;
+        display: flex;
+        gap: 20px;
+        animation: logo-move 50s linear infinite;
+      }
+
+      .reversed .logos {
+        animation-name: logo-move-reversed;
+      }
+
+      @keyframes logo-move {
+        0% {
+          transform: translate(0);
+        }
+
+        100% {
+          transform: translate(-100%);
+        }
+      }
+
+      @keyframes logo-move-reversed {
+        0% {
+          transform: translate(-100%);
+        }
+
+        100% {
+          transform: translate(0);
+        }
+      }
+
+      .logo {
+        background-color: #fff;
+        flex-shrink: 0;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <h1>DingTalk Logo 动画</h1>
+        <div
+          class="logos-wrap"
+          v-for="(group, idx) in logos"
+          :class="{ 'reversed': idx % 2 === 1 }"
+        >
+          <div class="logos">
+            <div class="logo" v-for="logo in group">
+              <img :src="logo" alt="" width="200" />
+            </div>
+          </div>
+          <div class="logos">
+            <div class="logo" v-for="logo in group">
+              <img :src="logo" alt="" width="200" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
+      createApp({
+        data() {
+          return {
+            logos: [
+              // part 1
+              [
+                "https://img.alicdn.com/imgextra/i4/O1CN018xHqp11HAQm1dR3W4_!!6000000000717-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN018HEhI51QIyhzR6T33_!!6000000001954-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01cxNKfp25LdFUsauQ9_!!6000000007510-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i4/O1CN01iGda6e1wRHat2myvC_!!6000000006304-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN01m4EHxP1kmYbIFG40O_!!6000000004726-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01aa2yQo1gN89RNzGE0_!!6000000004129-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01uVG86O24RIX0Neu2T_!!6000000007387-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01rsyfxW1lbqxdLxtbj_!!6000000004838-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01ELhOte1KDaLm3i2mE_!!6000000001130-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i4/O1CN01uPXqL31jTUV3Ohik8_!!6000000004549-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01bMC8W01hiUEijrBqL_!!6000000004311-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01qw0L3g25S2nOrdAEA_!!6000000007524-2-tps-400-200.png",
+              ],
+              // part 2
+              [
+                "https://img.alicdn.com/imgextra/i3/O1CN01ybcx2k29yLBZzrO52_!!6000000008136-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01Mrw1oc1DzwrZdK9Qm_!!6000000000288-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01HXgMfO1pCRRwMSjq9_!!6000000005324-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN01rkxbRH1IhEl9Y6wHX_!!6000000000924-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i4/O1CN01ygzLuQ1koqaGBSDQG_!!6000000004731-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01QLSUcS1lv5azFRBQK_!!6000000004880-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01xT5wGH20uNDMqEbWp_!!6000000006909-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN01qIrOub1a4uhfqpkkp_!!6000000003277-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01rXGSLX1QWGC5DIOkt_!!6000000001983-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01P2oLnV1e7tkPACuLZ_!!6000000003825-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01lTgpyA29q63X4OdNt_!!6000000008118-2-tps-400-200.png",
+              ],
+              [
+                // part 3
+                "https://img.alicdn.com/imgextra/i4/O1CN01S5Owuw1l9unfvBPVI_!!6000000004777-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN01PrlyXM1enZn0Ybxxu_!!6000000003916-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN01dqg8rM28Bxjhm2l5s_!!6000000007895-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01hQ3umX1e6WYi8UWKb_!!6000000003822-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i1/O1CN01aouCwu1JiRPoJouGL_!!6000000001062-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01FcvdSW1X9XrL5CA4d_!!6000000002881-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01jxRviY1TT0Du59mtJ_!!6000000002382-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN014d1bSm1mYTejvpykS_!!6000000004966-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01clVEV11KudZybXe1k_!!6000000001224-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i3/O1CN01xs1Fl127DxqjBkcbq_!!6000000007764-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i4/O1CN01xsHEg01jY4Sd0ihoY_!!6000000004559-2-tps-400-200.png",
+                "https://img.alicdn.com/imgextra/i2/O1CN01LZfUT322j2eA99Dbl_!!6000000007155-2-tps-400-200.png",
+              ],
+            ],
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
