@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>masonry</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .grid {
+            --cols: 4;
+            --gap: 10px;
+        }
+
+        .grid img {
+            width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+            margin-bottom: var(--gap);
+            border: 2px solid hsl(0, 0%, 0%, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid">
+    <img src="https://picsum.photos/400/600?1" width="400" height="600" alt="">
+    <img src="https://picsum.photos/400/400?2" width="400" height="400" alt="">
+    <img src="https://picsum.photos/400/800?3" width="400" height="800" alt="">
+    <img src="https://picsum.photos/400/200?4" width="400" height="200" alt="">
+    <img src="https://picsum.photos/400/300?5" width="400" height="300" alt="">
+    <img src="https://picsum.photos/400/700?6" width="400" height="700" alt="">
+    <img src="https://picsum.photos/600/600?7" width="600" height="600" alt="">
+    <img src="https://picsum.photos/800/400?8" width="800" height="400" alt="">
+</div>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+    new Masonry('.grid', {
+        itemSelector: '.grid img',
+        columnWidth: '.grid img',
+        percentPosition: true,
+        // horizontalOrder: true,
+        gutter: 10,
+    });
+</script>
+</body>
+</html>
