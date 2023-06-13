@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>clip-path</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      img {
+        display: block;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        background-color: #3a3a3a;
+      }
+
+      .box {
+        background-color: #fff;
+        padding: 15px;
+        border: 1px solid red;
+        /* FIXME 如何画一个三角形，放在右下角 */
+        /* clip-path: path("M 20 240 \ C 20 0 300 0 300 240 Z"); */
+        clip-path: circle(40%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <img src="https://picsum.photos/400" alt="" width="400" height="400" />
+    </div>
+  </body>
+</html>
