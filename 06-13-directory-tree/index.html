@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Directory Tree</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css"/>
+</head>
+<body>
+
+<p>jstree 是基于 jQuery 的，且自带样式，不容易自己定制。</p>
+<div id="container"></div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+<script>
+    $(function () {
+        $('#container').jstree({
+            "plugins": [
+                // "checkbox",
+                // "contextmenu",
+                // "state",
+            ],
+            'core': {
+                check_callback: true,
+                'data': [
+                    {
+                        "text": "Root node",
+                        // "icon": 'xxx',
+                        "state": {
+                            opened: true,
+                        },
+                        "children": [
+                            {
+                                "text": "Child node 1",
+                                "state": {
+                                    opened: true,
+                                },
+                                children: [
+                                    {
+                                        text: "hello",
+                                    },
+                                ],
+                            },
+                            {
+                                "text": "Child node 2",
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+    });
+</script>
+
+<p>fancytree 也是基于 jQuery 的，也很类似，不够满意</p>
+
+<div id="fancy-tree"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.27.0/jquery.fancytree-all-deps.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.27.0/skin-win8/ui.fancytree.css">
+<script>
+    $("#fancy-tree").fancytree({
+        // checkbox: true,
+        source: [
+            {title: "Node 1", key: "1", folder: true},
+            {
+                title: "Node 2", key: "2", folder: true, children: [
+                    {title: "Node 2.1", key: "3"},
+                    {title: "Node 2.2", key: "4"}
+                ]
+            },
+            {
+                title: "Node 3", key: "5", folder: true, children: [
+                    {title: "Node 3.1", key: "6"},
+                    {
+                        title: "Node 3.2", key: "7", folder: true, children: [
+                            {title: "Node 3.2.1", key: "8"},
+                            {title: "Node 3.2.2", key: "9"}
+                        ]
+                    }
+                ]
+            },
+        ],
+    });
+</script>
+
+<p>d3.js 完全不会用，怎么定制 SVG 的样式？感觉 https://gist.github.com/thehogfather/0e48ec486abbd5be17d7 可以，但是代码太长了，还有这个 https://stackoverflow.com/questions/68302893/d3-js-draw-file-directory-with-tree-layout</p>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+    // Define the directory tree data as a JSON object
+    var directoryData = {
+        "name": "root",
+        "children": [
+            {
+                "name": "dir1",
+                "children": [
+                    {"name": "file1", "size": 10},
+                    {"name": "file2", "size": 20},
+                    {"name": "file3", "size": 30}
+                ]
+            },
+            {
+                "name": "dir2",
+                "children": [
+                    {"name": "file4", "size": 40},
+                    {"name": "file5", "size": 50}
+                ]
+            }
+        ]
+    };
+
+    // Set up the tree layout
+    var treeLayout = d3.tree().size([500, 300]);
+
+    // Create the SVG element
+    var svg = d3.select("body").append("svg")
+        .attr("width", 600)
+        .attr("height", 400)
+        .append("g")
+        .attr("transform", "translate(50, 50)");
+
+    // Create the hierarchy from the directory data
+    var hierarchy = d3.hierarchy(directoryData);
+
+    // Compute the tree layout
+    var treeData = treeLayout(hierarchy);
+
+    // Create the nodes
+    var nodes = svg.selectAll(".node")
+        .data(treeData.descendants())
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.x + ", " + d.y + ")"; });
+
+    // Add the circles
+    nodes.append("circle")
+        .attr("r", 10);
+
+    // Add the text labels
+    nodes.append("text")
+        .text(function(d) { return d.data.name; })
+        .attr("dx", -8)
+        .attr("dy", 4);
+
+    // Add the links
+    var links = svg.selectAll(".link")
+        .data(treeData.links())
+        .enter()
+        .append("path")
+        .attr("class", "link")
+        .attr("d", function(d) {
+            return "M" + d.source.x + "," + d.source.y
+                + "C" + d.source.x + "," + (d.source.y + d.target.y) / 2
+                + " " + d.target.x + "," + (d.source.y + d.target.y) / 2
+                + " " + d.target.x + "," + d.target.y;
+        });
+
+</script>
+</body>
+</html>
