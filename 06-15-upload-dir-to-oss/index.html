@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload directory to OSS</title>
+</head>
+<body>
+<input type="file" id="filepicker" name="fileList" webkitdirectory multiple/>
+<ul id="listing"></ul>
+<script src="//gosspublic.alicdn.com/aliyun-oss-sdk-6.17.0.min.js"></script>
+<script>
+    document.querySelector('#filepicker').addEventListener('change', (event) => {
+        for (const file of event.target.files) {
+            // file.type = application/pdf
+            console.log(file);
+            document.querySelector('#listing').insertAdjacentHTML('beforeend', `<li>${file.webkitRelativePath}</li>`)
+        }
+    });
+
+    // 假设浏览器环境中已经引入OSS对象，可以通过`script`或者`npm`方式引入。
+    const client = new OSS({
+        // 从STS服务获取的临时访问密钥（AccessKey ID和AccessKey Secret）。
+        accessKeyId: 'LTAI5tP1oH6JTsdSDt87Mvd3',
+        accessKeySecret: 'IeajYc5gpAeaAMff27UriXLDuTXcqq',
+        // 从STS服务获取的安全令牌（SecurityToken）。
+        // stsToken: 'yourSecurityToken',
+        // 填写Bucket名称。
+        bucket: 'test-20230615-xcy',
+        // 填写Bucket所在地域。以华东1（杭州）为例，yourRegion填写为oss-cn-hangzhou。
+        region: 'oss-cn-shanghai'
+    });
+
+
+    client.list({
+        'max-keys': 10
+    }).then(function (result) {
+        console.log(result);
+        console.log(result.objects.map(item => item.url));
+    }).catch(function (err) {
+        console.log(err);
+    });
+</script>
+
+</body>
+</html>
