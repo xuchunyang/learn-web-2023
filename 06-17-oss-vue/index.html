@@ -24,6 +24,7 @@
         }
 
         img {
+            display: block;
             max-width: 100%;
         }
 
@@ -31,25 +32,52 @@
             list-style: none;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
+            //gap: 20px;
+        }
+
+        button {
+            background-color: blueviolet;
+            color: white;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        button:hover {
+            background-color: #671ea9;
+        }
+
+        .image {
+            position: relative;
+        }
+
+        .image button {
+            position: absolute;
+            top: 4px;
+            right: 4px;
         }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <input type="file" ref="file" @change="handleUpload" multiple style="display: none" accept="image/*">
-    <button @click="refresh">refresh file list</button>
-    <button @click="$refs.file.click()">Add file</button>
+    <input type="file" ref="image" @change="handleUpload" multiple style="display: none" accept="image/*">
+    <button @click="$refs.image.click()">Add images</button>
+    <button @click="refresh">Next page</button>
+    <button @click="deleteAllFiles">Delete all files</button>
+
     <p v-if="progress" v-text="progress"></p>
     <p v-if="isRefreshing">Loading...</p>
     <div v-else>
         <p v-if="!items.length">No file</p>
         <ul class="gallery" v-else>
             <li v-for="item in items">
-                <img :src="item.url" alt="">
-                <!--                <pre v-text="JSON.stringify(item, null, 2)"></pre>-->
-                <button @click="deleteItem(item.name)">Delete</button>
+                <div class="image">
+                    <img :src="item.url" alt="">
+                    <button @click="deleteItem(item.name)">Delete</button>
+                </div>
             </li>
         </ul>
     </div>
@@ -81,6 +109,7 @@
             isRefreshing: false,
             progress: '',
             items: [],
+            marker: null,
         },
         created() {
             this.refresh();
@@ -89,10 +118,14 @@
             refresh() {
                 this.isRefreshing = true;
                 client.list({
-                    'max-keys': 10
+                    'max-keys': 12,
+                    'marker': this.marker,
                 }).then((result) => {
                     console.log(result);
                     this.items = result.objects;
+                    if (result.isTruncated) {
+                        this.marker = result.nextMarker;
+                    }
                 }).catch((err) => {
                     console.log(err);
                 }).finally(() => {
@@ -112,6 +145,20 @@
                 await client.delete(path);
                 this.refresh();
             },
+            async deleteAllFiles() {
+                console.log('deleteAllFiles...');
+                const result = await client.list({
+                    'max-keys': 1000,
+                });
+                await client.deleteMulti(result.objects.map(item => item.name), {
+                    quiet: true,
+                });
+                if (result.isTruncated) {
+                    await this.deleteAllFiles();
+                } else {
+                    this.refresh();
+                }
+            }
         },
     });
 </script>
