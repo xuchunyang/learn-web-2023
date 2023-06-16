@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OSS + Vue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 10px;
+            background-color: #2c2c2c;
+            color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .gallery {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <input type="file" ref="file" @change="handleUpload" multiple style="display: none" accept="image/*">
+    <button @click="refresh">refresh file list</button>
+    <button @click="$refs.file.click()">Add file</button>
+    <p v-if="progress" v-text="progress"></p>
+    <p v-if="isRefreshing">Loading...</p>
+    <div v-else>
+        <p v-if="!items.length">No file</p>
+        <ul class="gallery" v-else>
+            <li v-for="item in items">
+                <img :src="item.url" alt="">
+                <!--                <pre v-text="JSON.stringify(item, null, 2)"></pre>-->
+                <button @click="deleteItem(item.name)">Delete</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.17.0.min.js"></script>
+<script src="https://unpkg.com/vue@2"></script>
+<script>
+    function getItem(key) {
+        while (localStorage.getItem(key) === null) {
+            localStorage.setItem(key, prompt(`Enter ${key}`));
+        }
+        return localStorage.getItem(key);
+    }
+
+    // 假设浏览器环境中已经引入OSS对象，可以通过`script`或者`npm`方式引入。
+    const client = new OSS({
+        accessKeyId: getItem('accessKeyId'),
+        accessKeySecret: getItem('accessKeySecret'),
+        bucket: '06-17-oss-vue',
+        endpoint: '06-17-oss-vue.domain-4-testing.com',
+        cname: true,
+        secure: true,
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+            isRefreshing: false,
+            progress: '',
+            items: [],
+        },
+        created() {
+            this.refresh();
+        },
+        methods: {
+            refresh() {
+                this.isRefreshing = true;
+                client.list({
+                    'max-keys': 10
+                }).then((result) => {
+                    console.log(result);
+                    this.items = result.objects;
+                }).catch((err) => {
+                    console.log(err);
+                }).finally(() => {
+                    this.isRefreshing = false;
+                });
+            },
+            async handleUpload(event) {
+                if (!event.target.files.length) return;
+                for (const file of event.target.files) {
+                    this.progress = `Uploading ${file.name}...`;
+                    await client.put(file.name, file);
+                }
+                this.refresh();
+                this.progress = null;
+            },
+            async deleteItem(path) {
+                await client.delete(path);
+                this.refresh();
+            },
+        },
+    });
+</script>
+
+</body>
+</html>
