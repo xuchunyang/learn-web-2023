@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>color-scheme</title>
+    <style>
+        :root {
+            color-scheme: dark light;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            a {
+                color: yellow;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<p>Learn the new <a href="#"><code>color-scheme</code></a> css property.</p>
+
+<div style="max-width: 300px; aspect-ratio: 1/1; overflow: auto">
+    <img src="https://picsum.photos/300/600" width="300" height="600" alt="">
+</div>
+
+<form>
+    <div>
+        <label>Name</label>
+        <input>
+    </div>
+    <div>
+        <label>Options</label>
+        <div>
+            <label><input type="checkbox" checked> Option one</label>
+        </div>
+        <div>
+            <label><input type="checkbox"> Option two</label>
+        </div>
+        <div>
+            <label> <input type="checkbox"> Option three</label>
+        </div>
+    </div>
+    <div>
+        <label>Progress</label>
+        <progress></progress>
+    </div>
+    <div>
+        <input type="submit">
+    </div>
+</form>
+
+</body>
+</html>
