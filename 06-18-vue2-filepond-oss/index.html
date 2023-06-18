@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Files to Aliyun OSS with FilePond & Vue2</title>
+    <link rel="stylesheet" href="https://unpkg.com/filepond/dist/filepond.min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css">
+    <script src="https://unpkg.com/vue@2"></script>
+    <script src="https://unpkg.com/filepond"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size"></script>
+    <script src="https://unpkg.com/vue-filepond@6"></script>
+    <script src="aliyun-oss-sdk-6.17.0.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <file-pond
+            ref="pond"
+            :allow-multiple="true"
+            :max-files="10"
+            :allow-reorder="true"
+            :accepted-file-types="['application/pdf', 'image/jpeg', 'image/png']"
+            :max-file-size="'100MB'"
+            :server="{ process: upload, revert: null, load: load }"
+            :files="initialFiles"
+            v-model="currentFiles"
+            @addFile="onAddFile"
+            :image-preview-max-height="120"
+    ></file-pond>
+    <pre v-text="$refs.pond && JSON.stringify($refs.pond.getFiles().map(file => {
+        return {
+            // id: file.id,
+            serverId: file.serverId,
+            // origin: file.origin,
+            // status: file.status,
+            // file: file.file,
+            fileExtension: file.fileExtension,
+            fileSize: file.fileSize,
+            filename: file.filename,
+            // filenameWithoutExtension: file.filenameWithoutExtension,
+        };
+    }), null, 2)"></pre>
+    <pre v-text="JSON.stringify(currentFiles.map(file => {
+        return {
+            // id: file.id,
+            serverId: file.serverId,
+            // origin: file.origin,
+            // status: file.status,
+            // file: file.file,
+            // fileExtension: file.fileExtension,
+            fileSize: file.fileSize,
+            filename: file.filename,
+            // filenameWithoutExtension: file.filenameWithoutExtension,
+        };
+    }), null, 2)"></pre>
+</div>
+
+<script>
+    function getItem(key) {
+        while (localStorage.getItem(key) === null) {
+            localStorage.setItem(key, prompt(`Enter ${key}`));
+        }
+        return localStorage.getItem(key);
+    }
+
+    const client = new OSS({
+        accessKeyId: getItem('accessKeyId'),
+        accessKeySecret: getItem('accessKeySecret'),
+        bucket: '06-17-oss-vue',
+        endpoint: '06-17-oss-vue.domain-4-testing.com',
+        cname: true,
+        secure: true,
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+            // [
+            //     {
+            //         "serverId": "百度一下，你就知道.pdf",
+            //         "fileSize": 251855,
+            //         "filename": "百度一下，你就知道.pdf"
+            //     }
+            //     ]
+            initialFiles: [
+                {
+                    source: "百度一下，你就知道.pdf",
+                    options: {
+                        type: 'local',
+                        file: {
+                            name: '百度一下，你就知道.pdf',
+                            size: 3001025,
+                            type: 'application/pdf',
+                        },
+                    },
+                },
+                {
+                    source: 'https://06-17-oss-vue.domain-4-testing.com/237-536x354.jpg',
+                    options: {
+                        type: 'local',
+                        // file: {
+                        //     name: '237-536x354.jpg',
+                        //     size: 3001025,
+                        //     type: 'image/jpeg',
+                        // },
+                    },
+                },
+            ],
+            currentFiles: [],
+        },
+        methods: {
+            load(source, load, error, progress, abort, headers, options) {
+                // console.log('load', source, load, error, progress, abort, headers, options);
+                // load(source);
+                fetch(source).then(res => res.blob()).then(blob => {
+                    load(blob);
+                });
+            },
+            upload(fieldName, file, metadata, load, error, progress, abort, transfer, options) {
+                console.log('upload', fieldName, file, metadata, load, error, progress, abort, transfer, options);
+                const fileName = file.name;
+                const fileSize = file.size;
+                const key = fileName;
+                const fileObj = file;
+                const uploadOptions = {
+                    progress: function (p) {
+                        progress(p.lengthComputable, p.loaded, p.total);
+                    }
+                };
+                client.multipartUpload(key, fileObj, uploadOptions).then(function (res) {
+                    console.log(res);
+                    load(client.getObjectUrl(res.name));
+                }).catch(function (err) {
+                    error(err);
+                });
+            },
+            async onAddFile(error, file) {
+                console.log('onAddFile', error, file, file.origin);
+                return;
+                const fileObj = file.file;
+                const res = await client.put(fileObj.name, fileObj);
+            },
+        },
+        components: {
+            FilePond: vueFilePond.default(
+                FilePondPluginImagePreview,
+                FilePondPluginFileValidateType,
+                FilePondPluginFileValidateSize,
+            ),
+        },
+    });
+</script>
+</body>
+</html>
