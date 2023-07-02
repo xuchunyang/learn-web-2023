@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GSAP + ScrollTrigger for counting</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: system-ui;
+            background-color: #282828;
+            color: #fff;
+        }
+
+        .page {
+            height: 100vh;
+            border: 1px solid rgba(255, 99, 71, 0.78);
+        }
+
+        .center {
+            display: grid;
+            place-items: center;
+        }
+
+        img, video, canvas, svg {
+            display: block;
+        }
+
+        .counter {
+            display: inline-block;
+            border: 2px solid hotpink;
+            font-size: 8rem;
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+</div>
+<div class="page center">
+    <div>
+        <span class="counter" data-from="0" data-to="100">100</span>
+        <span class="counter" data-from="1998" data-to="2023">2023</span>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.querySelectorAll('.counter').forEach(elem => {
+        const obj = {myNum: elem.dataset.from};
+        elem.textContent = Math.round(obj.myNum).toString();
+        gsap.to(obj, {
+            scrollTrigger: {
+                trigger: elem,
+                markers: true,
+                start: "top bottom-=200px",
+                toggleActions: "play none none reset",
+            },
+            duration: 3,
+            myNum: elem.dataset.to,
+            onUpdate: () => {
+                elem.textContent = Math.round(obj.myNum).toString();
+            },
+        })
+    });
+</script>
+</body>
+</html>
