@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>paste image - ClipboardEvent</title>
+    <style>
+        textarea {
+            line-height: 1.5;
+            padding: 1em;
+        }
+    </style>
+</head>
+<body>
+<h1>Example Domain</h1>
+
+<br class="Apple-interchange-newline">
+<textarea rows="10" cols="140"></textarea>
+<script>
+    document.querySelector('textarea').addEventListener('paste', (e) => {
+        console.assert(e instanceof ClipboardEvent, 'e is not a ClipboardEvent object');
+        console.assert(e.clipboardData instanceof DataTransfer, 'e.clipboardData is not a DataTransfer object');
+        const types = e.clipboardData.types;
+        const items = e.clipboardData.items;
+        const html = e.clipboardData.getData('text/html');
+        const text = e.clipboardData.getData('text/plain');
+        console.log({types, items, html, text});
+        e.target.value = html;
+        console.log(
+            "items",
+            [...items].map(item => {
+                return {kind: item.kind, type: item.type};
+            }),
+        );
+        [...items].forEach(item => {
+            if (item.type === 'image/png' || item.type === 'image/jpeg') {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    document.body.appendChild(img);
+                };
+                reader.readAsDataURL(blob);
+            }
+        });
+    });
+</script>
+</body>
+</html>
