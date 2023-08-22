@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Learn Paste</title>
+    <style>
+      .paste {
+        margin: 1em;
+        border: 1px solid #999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="result"></div>
+    <script>
+      document.addEventListener("paste", async (e) => {
+        e.preventDefault();
+
+        const files = e.clipboardData.files;
+        const items = e.clipboardData.items;
+        const types = e.clipboardData.types;
+        console.log({
+          files,
+          items,
+          types,
+        });
+        // return;
+
+        // console.log(e.clipboardData.files);
+        // return;
+
+        const plain = e.clipboardData.getData("text/plain");
+        const html = e.clipboardData.getData("text/html");
+        const rtf = e.clipboardData.getData("text/rtf");
+        console.log({
+          plain,
+          html,
+          rtf,
+        });
+        console.log("images in rtf", extractImageDataFromRtf(rtf));
+        for (const item of extractImageDataFromRtf(rtf)) {
+          const img = document.createElement("img");
+          img.src = handleImage(hexToBase64(item.hex));
+          document.body.append(img);
+        }
+
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        console.log(doc.querySelectorAll("img"));
+
+        const elem = document.createElement("div");
+        elem.classList.add("paste");
+        elem.innerHTML = html;
+        document
+          .querySelector(".result")
+          .insertAdjacentElement("beforeend", elem);
+        return;
+
+        for (const clipboardItem of e.clipboardData.files) {
+          if (clipboardItem.type.startsWith("image/")) {
+            // Do something with the image file.
+            // console.log(clipboardItem);
+            appendImage(clipboardItem);
+          }
+        }
+      });
+
+      function hexToBase64(hexString) {
+        return btoa(
+          hexString
+            .match(/\w{2}/g)
+            .map((char) => {
+              return String.fromCharCode(parseInt(char, 16));
+            })
+            .join("")
+        );
+      }
+
+      function handleImage(imageData) {
+        // 使用 window.atob() 解码 Base64 编码的图像数据
+        var binaryData = window.atob(imageData);
+
+        // 创建 Uint8Array 对象
+        var uint8Array = new Uint8Array(binaryData.length);
+        for (var i = 0; i < binaryData.length; i++) {
+          uint8Array[i] = binaryData.charCodeAt(i);
+        }
+
+        // 创建 Blob 对象
+        var blob = new Blob([uint8Array], { type: "image/png" }); // 这里假设图像是 PNG 格式
+
+        // 创建 Data URI
+        return URL.createObjectURL(blob);
+      }
+
+      const extractImageDataFromRtf = (rtfData) => {
+        if (!rtfData) {
+          return [];
+        }
+
+        const regexPictureHeader =
+          /{\\pict[\s\S]+?({\\\*\\blipuid\s?[\da-fA-F]+)[\s}]*/;
+        const regexPicture = new RegExp(
+          "(?:(" + regexPictureHeader.source + "))([\\da-fA-F\\s]+)\\}",
+          "g"
+        );
+        const images = rtfData.match(regexPicture);
+        const result = [];
+
+        if (images) {
+          for (const image of images) {
+            let imageType = false;
+
+            if (image.includes("\\pngblip")) {
+              imageType = "image/png";
+            } else if (image.includes("\\jpegblip")) {
+              imageType = "image/jpeg";
+            }
+
+            if (imageType) {
+              result.push({
+                hex: image
+                  .replace(regexPictureHeader, "")
+                  .replace(/[^\da-fA-F]/g, ""),
+                type: imageType,
+              });
+            }
+          }
+        }
+
+        return result;
+      };
+
+      const appendImage = (blob) => {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(blob);
+        document.body.append(img);
+      };
+    </script>
+  </body>
+</html>
