@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Load More</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #212121;
+            color: #fff;
+        }
+
+        .grid {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(6, 200px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            display: block;
+            margin: auto;
+            border: 0;
+            background-color: #3939cb;
+            color: #fff;
+            padding: 6px 18px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #999;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            opacity: 0;
+            transform: scale(0);
+        }
+    </style>
+</head>
+<body>
+<div x-data="{
+    page: 1,
+    images: [],
+    loading: false,
+    loadMore() {
+        if (this.loading) return;
+
+        this.loading = true;
+        fetch(`https://picsum.photos/v2/list?page=${this.page}&limit=12`)
+            .then(response => response.json())
+            .then(data => {
+                this.images = [...this.images, ...data];
+                this.page++;
+            })
+            .finally(() => {
+                this.loading = false;
+
+                $nextTick(() => {
+                    const items = [...document.querySelectorAll('img')].reverse().slice(0, 12).reverse();
+                    gsap.to(items, {
+                        delay: 0.1,
+                        duration: 1,
+                        opacity: 1,
+                        scale: 1,
+                        stagger: 0.1,
+                    });
+                });
+            });
+    },
+}"
+     x-init="
+    loadMore();
+
+    window.addEventListener('scroll', () => {
+        const {scrollTop, scrollHeight, clientHeight} = document.documentElement;
+
+        if (clientHeight + scrollTop >= scrollHeight - 10) {
+            loadMore();
+        }
+    });
+">
+    <ul class="grid">
+        <template x-for="image in images">
+            <li>
+                <img :src="`https://picsum.photos/id/${image.id}/200`"
+                     :alt="`Author: ${image.author}`"
+                     width="200"
+                     height="200">
+            </li>
+        </template>
+    </ul>
+    <button @click="loadMore" x-text="loading ? 'Loading...' : 'Load More'" :disabled="loading"></button>
+</div>
+<script>
+
+</script>
+</body>
+</html>
