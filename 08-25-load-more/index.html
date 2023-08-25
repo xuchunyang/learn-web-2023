@@ -17,7 +17,7 @@
         body {
             height: 100%;
             background-color: #212121;
-            color: #fff;
+            color: #d0d0d0;
         }
 
         .grid {
@@ -49,10 +49,18 @@
             opacity: 0;
             transform: scale(0);
         }
+
+        .cols {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
 <div x-data="{
+    cols: 6,
     page: 1,
     images: [],
     loading: false,
@@ -93,7 +101,12 @@
         }
     });
 ">
-    <ul class="grid">
+    <div class="cols">
+        <label for="cols">Cols</label>
+        <input id="cols" type="range" min="4" max="10" x-model="cols">
+        <span x-text="cols"></span>
+    </div>
+    <ul class="grid" :style="{'grid-template-columns': `repeat(${cols}, 200px)`}">
         <template x-for="image in images">
             <li>
                 <img :src="`https://picsum.photos/id/${image.id}/200`"
