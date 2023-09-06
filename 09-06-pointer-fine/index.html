@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>@media (pointer: fine)</title>
+    <style>
+      @media (pointer: none) {
+        .none {
+          color: red;
+        }
+      }
+
+      @media (pointer: coarse) {
+        .coarse {
+          color: red;
+        }
+      }
+
+      @media (pointer: fine) {
+        .fine {
+          color: red;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <label class="none"><input type="checkbox" />pointer: none</label>
+      </li>
+      <li>
+        <label class="coarse"><input type="checkbox" />pointer: coarse</label>
+      </li>
+      <li>
+        <label class="fine"><input type="checkbox" />pointer: fine</label>
+      </li>
+    </ul>
+  </body>
+</html>
