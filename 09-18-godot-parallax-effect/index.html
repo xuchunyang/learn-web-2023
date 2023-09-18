@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Godot Parallax Effect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Roboto+Condensed:wght@700&display=swap');
+
+        :root {
+            box-sizing: border-box;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #25282b;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .banner {
+            height: 100vh;
+            position: relative;
+            background-color: #263256;
+            overflow: hidden;
+        }
+
+        header {
+            position: relative;
+            z-index: 1;
+            background-color: rgb(134 144 154 / 15%);
+            backdrop-filter: blur(4px);
+        }
+
+        header nav {
+            display: flex;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1.875rem;
+        }
+
+        header nav ul {
+            list-style: none;
+            flex: 1;
+            display: flex;
+        }
+
+        header nav ul a {
+            font-family: "Montserrat", sans-serif;
+            font-weight: bold;
+            display: block;
+            text-decoration: none;
+            color: currentColor;
+            padding: 1.3175rem 1rem;
+        }
+
+        header nav ul li.download {
+            margin-left: auto;
+        }
+
+        header nav ul li.donate {
+            display: flex;
+            align-items: center;
+        }
+
+        header nav ul li.donate a {
+            border: 1px solid #ef6767;
+            border-radius: 9px;
+            background-color: #25282b;
+            color: #ef6767;
+            padding: 13px;
+        }
+
+        .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://godotengine.org/assets/showcase/tail-quest.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-blend-mode: darken;
+            background-color: rgb(51, 63, 103, 0.4);
+            opacity: 0.6;
+            will-change: transform;
+        }
+
+        .text {
+            max-width: 670px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+            padding: 200px 20px 120px;
+        }
+
+        .text h1 {
+            font-family: "Montserrat", sans-serif;
+            font-size: 60px;
+        }
+
+        .text p {
+            font-size: 20px;
+            line-height: 1.75;
+            max-width: 550px;
+            margin: 1em 0;
+        }
+
+        main {
+            height: 300vh;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="banner">
+    <div class="bg"></div>
+    <header>
+        <div class="container">
+            <nav>
+                <a class="logo" href="#"><img src="https://godotengine.org/assets/logo_dark.svg" width="136" height="48"
+                                              alt=""></a>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Assets</a></li>
+                    <li class="download"><a href="#">Download</a></li>
+                    <li><a href="#">Learn</a></li>
+                    <li><a href="#">Contribute</a></li>
+                    <li class="donate"><a href="#">❤︎ Donate</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <div class="text">
+            <h1>The game engine you've been waiting&nbsp;for.</h1>
+            <p>The Godot Engine is a free, all-in-one, cross-platform game engine that makes it easy for you to create
+                2D and 3D games.</p>
+        </div>
+    </div>
+</div>
+<main></main>
+<script>
+    const parallaxImage = document.querySelector('.bg');
+    const parallaxSpeed = 0.4;
+
+    const parallaxTick = () => {
+        parallaxImage.style.transform = `translateY(${window.pageYOffset * parallaxSpeed}px)`;
+    };
+
+    window.addEventListener('scroll', () => {
+        window.requestAnimationFrame(parallaxTick);
+    });
+</script>
+</body>
+</html>
